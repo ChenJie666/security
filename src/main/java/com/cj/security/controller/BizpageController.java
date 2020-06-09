@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BizpageController {
 
     //登录
-    @PostMapping("/login")
+    @PostMapping("/login1")
     public String index(String username, String password) {
         return "index";
     }
