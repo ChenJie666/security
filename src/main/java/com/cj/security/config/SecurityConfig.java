@@ -3,6 +3,7 @@ package com.cj.security.config;
 import com.cj.security.auth.MyAuthenticationFailureHandler;
 import com.cj.security.auth.MyAuthenticationSuccessHandler;
 import com.cj.security.auth.MyExpiredSessionStrategy;
+import com.cj.security.auth.imagecode.CaptchaCodeFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -44,6 +46,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
     private MyAuthenticationFailureHandler myAuthenticationFailureHandler;
 
+    @Resource
+    private CaptchaCodeFilter captchaCodeFilter;
+
     /**
      * 采用formLogin方式进行认证
      *
@@ -53,6 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                //设置过滤器
+                .addFilterBefore(captchaCodeFilter,UsernamePasswordAuthenticationFilter.class) //将验证码过滤器放到账号密码前面执行
                 //退出登录
                 .logout()
                 .logoutUrl("/logout") //退出登录的请求接口
@@ -81,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 //2.authorizeRequests配置端
                 .authorizeRequests()
-                .antMatchers("/login.html", "/login").permitAll() //不需要验证即可访问
+                .antMatchers("/login.html", "/login","/kaptcha").permitAll() //不需要验证即可访问
                 .antMatchers("/biz1", "/biz2").hasAnyAuthority("ROLE_user", "ROLE_admin")//user和admin权限可以访问的路径，等同于hasAnyRole("user","admin")
 //                .antMatchers("/syslog","/sysuser").hasAnyRole("admin")//admin角色可以访问的路径
                 .antMatchers("/syslog").hasAuthority("sys:log")//权限id，有该id的用户可以访问

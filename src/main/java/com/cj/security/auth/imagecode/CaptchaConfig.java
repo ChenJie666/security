@@ -5,6 +5,7 @@ import com.google.code.kaptcha.util.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 import java.util.Properties;
 
@@ -12,6 +13,7 @@ import java.util.Properties;
  * @Author: CJ
  * @Data: 2020/6/9 18:01
  */
+@Component
 @PropertySource(value = {"classpath:kaptcha.properties"})
 public class CaptchaConfig {
 
