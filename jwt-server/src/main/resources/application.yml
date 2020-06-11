@@ -11,3 +11,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: abc123
+
+jwt:
+  secret: abcdefg
+  expiration: 3600000
+  header: JWTHeaderName

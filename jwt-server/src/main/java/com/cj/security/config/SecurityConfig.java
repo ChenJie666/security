@@ -1,19 +1,21 @@
-package security.config;
+package com.cj.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import security.auth.MyAuthenticationFailureHandler;
-import security.auth.MyAuthenticationSuccessHandler;
-import security.auth.MyExpiredSessionStrategy;
+import com.cj.security.auth.MyAuthenticationFailureHandler;
+import com.cj.security.auth.MyAuthenticationSuccessHandler;
+import com.cj.security.auth.MyExpiredSessionStrategy;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -25,20 +27,6 @@ import javax.sql.DataSource;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    /**
-     * 采用httpbasic方式进行认证
-     * @param http
-     * @throws Exception
-     */
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.httpBasic()//开启httpbasic认证
-//        .and()
-//                .authorizeRequests()
-//                .anyRequest()
-//                .authenticated();//所有请求都需要登录认证
-//    }
-
     @Resource
     private MyAuthenticationSuccessHandler mySuthenticationSuccessHandler;
 
@@ -46,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private MyAuthenticationFailureHandler myAuthenticationFailureHandler;
 
     /**
-     * 采用formLogin方式进行认证
+     * 采用JWT方式进行认证
      *
      * @param http
      * @throws Exception
@@ -87,24 +75,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .expiredSessionStrategy(new MyExpiredSessionStrategy());//会话过期后进行的自定义操作
     }
 
+
+    //注入自定义用户信息加载对象
+    @Resource
+    private UserDetailsService userDetailsService;
+
     /**
-     * 将角色信息存储在内存中
+     * 将角色信息存储在数据库中,从数据库中动态加载用户账号密码及其权限
+     *
      * @param auth
      * @throws Exception
      */
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("user")
-                .password(bCryptPasswordEncoder().encode("abc123"))
-                .roles("user")
-                .and()
-                .withUser("admin")
-                .password(bCryptPasswordEncoder().encode("abc123"))
-//                .authorities("sys:log","sys:user")
-                .roles("admin")
-                .and()
-                .passwordEncoder(bCryptPasswordEncoder());//配置BCrypt加密
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService)
+                .passwordEncoder(bCryptPasswordEncoder());
     }
 
     @Bean
@@ -136,6 +121,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         tokenRepository.setDataSource(dataSource);
 
         return tokenRepository;
+    }
+
+    /**
+     * 注入认证管理器，在JwtAuthService类中注入
+     * @return
+     * @throws Exception
+     */
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    @Override
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
     }
 
 }
