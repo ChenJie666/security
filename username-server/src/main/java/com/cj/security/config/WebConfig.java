@@ -1,4 +1,4 @@
-package security.config;
+package com.cj.security.config;
 
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

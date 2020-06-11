@@ -1,4 +1,4 @@
-package security.auth.imagecode;
+package com.cj.security.auth.imagecode;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;

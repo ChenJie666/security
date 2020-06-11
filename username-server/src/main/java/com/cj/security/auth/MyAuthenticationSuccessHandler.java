@@ -1,4 +1,4 @@
-package security.auth;
+package com.cj.security.auth;
 
 import com.cj.security.utils.CommonResult;
 import com.fasterxml.jackson.databind.ObjectMapper;

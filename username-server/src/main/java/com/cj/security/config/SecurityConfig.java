@@ -1,9 +1,5 @@
-package security.config;
+package com.cj.security.config;
 
-import com.cj.security.auth.MyAuthenticationFailureHandler;
-import com.cj.security.auth.MyAuthenticationSuccessHandler;
-import com.cj.security.auth.MyExpiredSessionStrategy;
-import com.cj.security.auth.imagecode.CaptchaCodeFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,6 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import com.cj.security.auth.MyAuthenticationFailureHandler;
+import com.cj.security.auth.MyAuthenticationSuccessHandler;
+import com.cj.security.auth.MyExpiredSessionStrategy;
+import com.cj.security.auth.imagecode.CaptchaCodeFilter;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -25,20 +25,6 @@ import javax.sql.DataSource;
  */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    /**
-     * 采用httpbasic方式进行认证
-     * @param http
-     * @throws Exception
-     */
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.httpBasic()//开启httpbasic认证
-//        .and()
-//                .authorizeRequests()
-//                .anyRequest()
-//                .authenticated();//所有请求都需要登录认证
-//    }
 
     @Resource
     private MyAuthenticationSuccessHandler mySuthenticationSuccessHandler;
@@ -103,6 +89,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .maxSessionsPreventsLogin(false)//false表示允许再次登录但会踢出之前的登陆；true表示不允许再次登录
                 .expiredSessionStrategy(new MyExpiredSessionStrategy());//会话过期后进行的自定义操作
     }
+
+
 
     /**
      * 将角色信息存储在内存中

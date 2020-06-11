@@ -1,4 +1,4 @@
-package security.controller;
+package com.cj.security.controller;
 
 import com.cj.security.auth.imagecode.CaptchaImageVO;
 import com.cj.security.utils.MyConstants;

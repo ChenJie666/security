@@ -1,4 +1,4 @@
-package security.utils;
+package com.cj.security.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
