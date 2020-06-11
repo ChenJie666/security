@@ -66,13 +66,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login.html") //退出登录后跳转的路径
                 .deleteCookies("JSESSIONID") //退出时删除浏览器中的cookie
                 .and()
-                //自动登录
-                .rememberMe()
-                .rememberMeParameter("remember-me-new")
-                .rememberMeCookieName("remember-me-cookie")
-                .tokenValiditySeconds(60*60*24*2)
-                .tokenRepository(persistentTokenRepository())
-                .and()
                 //禁用csrf攻击防御
                 .csrf().disable()
                 //1.formLogin配置段
@@ -137,22 +130,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/css/**", "/fonts/**", "img/**", "js/**");
-    }
-
-
-    @Resource
-    private DataSource dataSource;
-
-    /**
-     * 将数据库连接封装到框架中
-     * @return
-     */
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository(){
-        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-        tokenRepository.setDataSource(dataSource);
-
-        return tokenRepository;
     }
 
 }

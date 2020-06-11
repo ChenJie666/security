@@ -20,7 +20,7 @@ public class MyUserDetails implements UserDetails {
     boolean accountNonExpired = true; // 账号是否过期
     boolean accountNonLocked = true; //用户是否被锁定
     boolean credentialsNonExpired = true; //凭证是否过期
-    boolean enabled; //账号是否可用
+    boolean enabled = true; //账号是否可用
     Collection<? extends GrantedAuthority> authorities; //用户权限集合
 
     @Override

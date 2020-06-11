@@ -2,6 +2,7 @@ package com.cj.security.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -17,32 +18,27 @@ public class BizpageController {
         return "index";
     }
 
-    // 登录成功之后的首页
-    @GetMapping("/index")
-    public String index() {
-        return "index";
-    }
-
-    // 日志管理
-    @GetMapping("/syslog")
+//     日志管理
+    @GetMapping("/users/view/syslog")
+    @ResponseBody
     public String showOrder() {
         return "syslog";
     }
 
     // 用户管理
-    @GetMapping("/sysuser")
+    @GetMapping("/users/view/sysuser")
     public String addOrder() {
         return "sysuser";
     }
 
     // 具体业务一
-    @GetMapping("/biz1")
+    @GetMapping("/contents/view/biz1")
     public String updateOrder() {
         return "biz1";
     }
 
     // 具体业务二
-    @GetMapping("/biz2")
+    @GetMapping("/contents/view/biz2")
     public String deleteOrder() {
         return "biz2";
     }

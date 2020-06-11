@@ -1,5 +1,6 @@
 package com.cj.security.config;
 
+import com.cj.security.auth.MyUserDetailsServer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -45,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 //设置过滤器
-                .addFilterBefore(captchaCodeFilter,UsernamePasswordAuthenticationFilter.class) //将验证码过滤器放到账号密码前面执行
+                .addFilterBefore(captchaCodeFilter, UsernamePasswordAuthenticationFilter.class) //将验证码过滤器放到账号密码前面执行
                 //退出登录
                 .logout()
                 .logoutUrl("/logout") //退出登录的请求接口
@@ -56,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe()
                 .rememberMeParameter("remember-me-new")
                 .rememberMeCookieName("remember-me-cookie")
-                .tokenValiditySeconds(60*60*24*2)
+                .tokenValiditySeconds(60 * 60 * 24 * 2)
                 .tokenRepository(persistentTokenRepository())
                 .and()
                 //禁用csrf攻击防御
@@ -74,11 +75,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 //2.authorizeRequests配置端
                 .authorizeRequests()
-                .antMatchers("/login.html", "/login","/kaptcha").permitAll() //不需要验证即可访问
-                .antMatchers("/biz1", "/biz2").hasAnyAuthority("ROLE_user", "ROLE_admin")//user和admin权限可以访问的路径，等同于hasAnyRole("user","admin")
+                .antMatchers("/login.html", "/login", "/kaptcha").permitAll() //不需要验证即可访问
+                .antMatchers("/contents/view/biz1", "/contents/view/biz2").hasAnyAuthority("ROLE_operator", "ROLE_admin")//user和admin权限可以访问的路径，等同于hasAnyRole("user","admin")
 //                .antMatchers("/syslog","/sysuser").hasAnyRole("admin")//admin角色可以访问的路径
-                .antMatchers("/syslog").hasAuthority("sys:log")//权限id，有该id的用户可以访问
-                .antMatchers("/sysuser").hasAuthority("sys:user")
+                .antMatchers("/users/view/syslog","/syslog.html").hasAuthority("/users/view/**")//权限id，有该id的用户可以访问
+                .antMatchers("/users/view/sysuser").hasAuthority("/users/view/**")
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
@@ -90,35 +91,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .expiredSessionStrategy(new MyExpiredSessionStrategy());//会话过期后进行的自定义操作
     }
 
-
+    @Resource
+    private MyUserDetailsServer myUserDetailsServer;
 
     /**
      * 将角色信息存储在内存中
+     *
      * @param auth
      * @throws Exception
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("user")
-                .password(bCryptPasswordEncoder().encode("abc123"))
-                .roles("user")
-                .and()
-                .withUser("admin")
-                .password(bCryptPasswordEncoder().encode("abc123"))
-//                .authorities("sys:log","sys:user")
-                .roles("admin")
-                .and()
-                .passwordEncoder(bCryptPasswordEncoder());//配置BCrypt加密
+        auth.userDetailsService(myUserDetailsServer).passwordEncoder(bCryptPasswordEncoder());
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     /**
      * 静态资源访问不需要鉴权
+     *
      * @param web
      * @throws Exception
      */
@@ -133,10 +127,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 将数据库连接封装到框架中
+     *
      * @return
      */
     @Bean
-    public PersistentTokenRepository persistentTokenRepository(){
+    public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
         tokenRepository.setDataSource(dataSource);
 

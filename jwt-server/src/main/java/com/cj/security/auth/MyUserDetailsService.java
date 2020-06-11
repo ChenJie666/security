@@ -33,6 +33,7 @@ public class MyUserDetailsService implements UserDetailsService {
         List<String> roleCodes = myUserDetailsServiceMapper.findRoleByUsername(username);
         List<String> authorities = myUserDetailsServiceMapper.findAuthorityByRoleCodes(roleCodes);
 
+        //将用户角色添加到用户权限中
         authorities.addAll(roleCodes);
 
         //设置UserDetails中的authorities属性，需要将String类型转换为GrantedAuthority
