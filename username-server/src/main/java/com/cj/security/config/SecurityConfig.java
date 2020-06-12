@@ -76,11 +76,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //2.authorizeRequests配置端
                 .authorizeRequests()
                 .antMatchers("/login.html", "/login", "/kaptcha").permitAll() //不需要验证即可访问
-                .antMatchers("/contents/view/biz1", "/contents/view/biz2").hasAnyAuthority("ROLE_operator", "ROLE_admin")//user和admin权限可以访问的路径，等同于hasAnyRole("user","admin")
-//                .antMatchers("/syslog","/sysuser").hasAnyRole("admin")//admin角色可以访问的路径
-                .antMatchers("/users/view/syslog","/syslog.html").hasAuthority("/users/view/**")//权限id，有该id的用户可以访问
-                .antMatchers("/users/view/sysuser").hasAuthority("/users/view/**")
-                .anyRequest().authenticated()
+                .antMatchers("/index.html").authenticated() //通过认证即可访问
+                .anyRequest().access("@rbacService.hasPermission(request,authentication)")
+//                .antMatchers("/contents/view/biz1", "/contents/view/biz2").hasAnyAuthority("ROLE_operator", "ROLE_admin")//user和admin权限可以访问的路径，等同于hasAnyRole("user","admin")
+////                .antMatchers("/syslog","/sysuser").hasAnyRole("admin")//admin角色可以访问的路径
+//                .antMatchers("/users/view/syslog","/syslog.html").hasAuthority("/users/view/**")//权限id，有该id的用户可以访问
+//                .antMatchers("/users/view/sysuser").hasAuthority("/users/view/**")
+//                .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -121,7 +123,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/css/**", "/fonts/**", "img/**", "js/**");
     }
 
-
+    /**
+     * 注入dataSource对象
+     */
     @Resource
     private DataSource dataSource;
 

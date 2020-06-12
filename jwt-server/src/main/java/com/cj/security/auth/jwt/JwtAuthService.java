@@ -1,5 +1,7 @@
 package com.cj.security.auth.jwt;
 
+import com.cj.security.utils.CommonResult;
+import jdk.nashorn.internal.parser.Token;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -8,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 
@@ -18,6 +22,7 @@ import javax.annotation.Resource;
 @Service
 public class JwtAuthService {
 
+    //UsernamePasswordAuthenticationFilter最终会将用户名密码通过AuthenticationManager的authenticate方法进行验证
     @Resource
     AuthenticationManager authenticationManager;
 
@@ -35,7 +40,7 @@ public class JwtAuthService {
         try {
             //根据账号密码构造token
             UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
-            //token认证不通过，则抛出异常
+            //通过该方法对账号密码进行认证，认证不通过则抛出异常
             Authentication authenticate = authenticationManager.authenticate(upToken);
             //认证通过则将认证结果放入上下文
             SecurityContextHolder.getContext().setAuthentication(authenticate);
@@ -43,9 +48,24 @@ public class JwtAuthService {
             throw new IllegalArgumentException("账号密码认证不通过");
         }
 
-        //根据username获取上下文中的userDetails，生成token返回
+        //验证通过后，根据username查询数据库中的该用户的详细信息，生成token返回
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return jwtTokenUtil.generateToken(userDetails);
     }
+
+    /**
+     * 刷新请求头中的token令牌
+     *
+     * @param oldToken
+     * @return
+     */
+    public String refreshToken(String oldToken) {
+        if (!jwtTokenUtil.isTokenExpired(oldToken)) {
+            return jwtTokenUtil.refreshToken(oldToken);
+        }
+
+        return null;
+    }
+
 
 }

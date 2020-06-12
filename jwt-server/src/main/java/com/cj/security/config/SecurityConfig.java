@@ -1,5 +1,8 @@
 package com.cj.security.config;
 
+import com.cj.security.auth.MyAuthenticationFailureHandler;
+import com.cj.security.auth.MyAuthenticationSuccessHandler;
+import com.cj.security.auth.jwt.JwtAuthenticationTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,11 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import com.cj.security.auth.MyAuthenticationFailureHandler;
-import com.cj.security.auth.MyAuthenticationSuccessHandler;
-import com.cj.security.auth.MyExpiredSessionStrategy;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -33,6 +34,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
     private MyAuthenticationFailureHandler myAuthenticationFailureHandler;
 
+    @Resource
+    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+
     /**
      * 采用JWT方式进行认证
      *
@@ -42,6 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                //设置token认证过滤器
+                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 //退出登录
                 .logout()
                 .logoutUrl("/logout") //退出登录的请求接口
@@ -52,27 +58,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe()
                 .rememberMeParameter("remember-me-new")
                 .rememberMeCookieName("remember-me-cookie")
-                .tokenValiditySeconds(60*60*24*2)
+                .tokenValiditySeconds(60 * 60 * 24 * 2)
                 .tokenRepository(persistentTokenRepository())
                 .and()
                 //禁用csrf攻击防御
                 .csrf().disable()
                 //authorizeRequests配置端
                 .authorizeRequests()
-                .antMatchers("/login.html", "/login","/kaptcha").permitAll() //不需要验证即可访问
-                .antMatchers("/biz1", "/biz2").hasAnyAuthority("ROLE_user", "ROLE_admin")//user和admin权限可以访问的路径，等同于hasAnyRole("user","admin")
-//                .antMatchers("/syslog","/sysuser").hasAnyRole("admin")//admin角色可以访问的路径
-                .antMatchers("/syslog").hasAuthority("sys:log")//权限id，有该id的用户可以访问
-                .antMatchers("/sysuser").hasAuthority("sys:user")
-                .anyRequest().authenticated()
+                .antMatchers("/login.html", "/login", "/kaptcha", "/authentication", "/refreshToken").permitAll() //不需要验证即可访问
+                .antMatchers("/index.html").authenticated()
+                .anyRequest().access("@rbacService.hasPermission(request,authentication)")
+//                .antMatchers("/biz1", "/biz2").hasAnyAuthority("ROLE_user", "ROLE_admin")//user和admin权限可以访问的路径，等同于hasAnyRole("user","admin")
+////                .antMatchers("/syslog","/sysuser").hasAnyRole("admin")//admin角色可以访问的路径
+//                .antMatchers("/syslog").hasAuthority("sys:log")//权限id，有该id的用户可以访问
+//                .antMatchers("/sysuser").hasAuthority("sys:user")
                 .and()
+                //将session类型改为无状态，不创建也不使用session
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .invalidSessionUrl("/login.html")
-                .sessionFixation().migrateSession()
-                .maximumSessions(1) //最大登录数为1
-                .maxSessionsPreventsLogin(false)//false表示允许再次登录但会踢出之前的登陆；true表示不允许再次登录
-                .expiredSessionStrategy(new MyExpiredSessionStrategy());//会话过期后进行的自定义操作
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
 

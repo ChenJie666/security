@@ -3,13 +3,15 @@ package com.cj.security.auth;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
 /**
  * @Author: CJ
- * @Data: 2020/6/11 10:48
+ * @Data: 2020/6/11 18:09
  */
+@Component
 @Data
 public class MyUserDetails implements UserDetails {
 
@@ -18,7 +20,7 @@ public class MyUserDetails implements UserDetails {
     boolean accountNonExpired = true; // 账号是否过期
     boolean accountNonLocked = true; //用户是否被锁定
     boolean credentialsNonExpired = true; //凭证是否过期
-    boolean enabled; //账号是否可用
+    boolean enabled = true; //账号是否可用
     Collection<? extends GrantedAuthority> authorities; //用户权限集合
 
     @Override
@@ -28,12 +30,12 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return username;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return password;
+        return username;
     }
 
     @Override

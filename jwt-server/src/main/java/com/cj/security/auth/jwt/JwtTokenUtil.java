@@ -46,7 +46,7 @@ public class JwtTokenUtil {
         Date date = new Date(System.currentTimeMillis() + expiration);
         return Jwts.builder().setClaims(claims)
                 .setExpiration(date)
-                .signWith(SignatureAlgorithm.ES512,secret)
+                .signWith(SignatureAlgorithm.HS512,secret)
                 .compact();
     }
 
@@ -74,6 +74,7 @@ public class JwtTokenUtil {
     private Claims getClaimsFromToken(String token) {
         Claims claims = null;
         try {
+            //获取claims的过程就是对token合法性检验的过程，将token解析为Claims对象
             claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         } catch (Exception e) {
             e.printStackTrace();

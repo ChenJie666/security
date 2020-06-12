@@ -16,6 +16,7 @@ public class ExceptionAdapter {
     @ExceptionHandler({Exception.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CommonResult exception(Exception e){
+        e.printStackTrace();
         String message = e.getMessage();
         return CommonResult.error().setMessage(message);
     }
