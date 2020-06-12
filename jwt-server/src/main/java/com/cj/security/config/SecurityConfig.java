@@ -1,7 +1,5 @@
 package com.cj.security.config;
 
-import com.cj.security.auth.MyAuthenticationFailureHandler;
-import com.cj.security.auth.MyAuthenticationSuccessHandler;
 import com.cj.security.auth.jwt.JwtAuthenticationTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,11 +13,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.annotation.Resource;
-import javax.sql.DataSource;
 
 /**
  * @Author: CJ
@@ -27,12 +22,6 @@ import javax.sql.DataSource;
  */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Resource
-    private MyAuthenticationSuccessHandler mySuthenticationSuccessHandler;
-
-    @Resource
-    private MyAuthenticationFailureHandler myAuthenticationFailureHandler;
 
     @Resource
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
@@ -48,19 +37,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 //设置token认证过滤器
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                //退出登录
-                .logout()
-                .logoutUrl("/logout") //退出登录的请求接口
-                .logoutSuccessUrl("/login.html") //退出登录后跳转的路径
-                .deleteCookies("JSESSIONID") //退出时删除浏览器中的cookie
-                .and()
-                //自动登录
-                .rememberMe()
-                .rememberMeParameter("remember-me-new")
-                .rememberMeCookieName("remember-me-cookie")
-                .tokenValiditySeconds(60 * 60 * 24 * 2)
-                .tokenRepository(persistentTokenRepository())
-                .and()
                 //禁用csrf攻击防御
                 .csrf().disable()
                 //authorizeRequests配置端
@@ -79,7 +55,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-    //注入自定义用户信息加载对象
+    /**
+     * 注入自定义用户信息加载对象
+     */
     @Resource
     private UserDetailsService userDetailsService;
 
@@ -110,24 +88,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/css/**", "/fonts/**", "img/**", "js/**");
     }
 
-
-    @Resource
-    private DataSource dataSource;
-
     /**
-     * 将数据库连接封装到框架中
-     * @return
-     */
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository(){
-        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-        tokenRepository.setDataSource(dataSource);
-
-        return tokenRepository;
-    }
-
-    /**
-     * 注入认证管理器，在JwtAuthService类中注入
+     * 注入认证管理器，在JwtAuthService类中使用
      * @return
      * @throws Exception
      */

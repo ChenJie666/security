@@ -1,6 +1,7 @@
 package com.cj.security.auth.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
@@ -61,7 +62,7 @@ public class JwtTokenUtil {
             Claims claims = getClaimsFromToken(token);
             username = claims.getSubject();
         } catch (Exception e) {
-            e.printStackTrace();
+//            throw new IllegalArgumentException(e.getMessage());
         }
         return username;
     }
@@ -76,8 +77,8 @@ public class JwtTokenUtil {
         try {
             //获取claims的过程就是对token合法性检验的过程，将token解析为Claims对象
             claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ExpiredJwtException e) {
+//            throw new IllegalArgumentException("token已过期");
         }
 
         return claims;
@@ -106,7 +107,7 @@ public class JwtTokenUtil {
             claims.put("created", new Date());
             refreshedToken = generateToken(claims);
         } catch (Exception e) {
-            e.printStackTrace();
+//            throw new IllegalArgumentException(e.getMessage());
         }
 
         return refreshedToken;
