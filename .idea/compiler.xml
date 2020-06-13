@@ -2,14 +2,20 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="basic-server" />
+        <module name="database-server" />
         <module name="jwt-server" />
-        <module name="username-server" />
+        <module name="security-order" />
+        <module name="security-uaa" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="username-server" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

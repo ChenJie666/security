@@ -11,7 +11,8 @@
     <modules>
         <module>basic-server</module>
         <module>jwt-server</module>
-        <module>username-server</module>
+        <module>database-server</module>
+        <module>oauth2-server</module>
     </modules>
 
 

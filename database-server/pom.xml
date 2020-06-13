@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>username-server</artifactId>
+    <artifactId>database-server</artifactId>
     <build>
         <plugins>
             <plugin>
