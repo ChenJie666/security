@@ -2,6 +2,7 @@ package oauth2.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
@@ -19,7 +20,7 @@ public class TokenConfig {
      * @return
      */
     @Bean
-    public TokenStore tokenStore(){
+    public TokenStore tokenStore() {
         //使用内存存储令牌
         return new InMemoryTokenStore();
     }

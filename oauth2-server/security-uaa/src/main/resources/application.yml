@@ -1,0 +1,17 @@
+server:
+  servlet:
+    session:
+      timeout: 20s
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://116.62.148.11:3306/security?useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: abc123
+
+jwt:
+  secret: abcdefg
+  expiration: 3600000
+  header: JWTHeaderName

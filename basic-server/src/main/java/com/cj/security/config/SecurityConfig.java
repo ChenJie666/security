@@ -73,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login.html")//用户访问资源时先跳转到该登录页面
                 .loginProcessingUrl("/login")//登录表单中的action的地址，在该接口中进行认证
                 .usernameParameter("username")//登录表单form中的用户名输入框input的name名，缺省是username
-                .passwordParameter("password")//登录表单form中的密码输入框input的name名，缺省是username
+                .passwordParameter("password")//登录表单form中的密码输入框input的name名，缺省是password
 //                .defaultSuccessUrl("/index")//登录成功后默认跳转的路径
                 .successHandler(mySuthenticationSuccessHandler)//使用自定义的成功后的逻辑
 //                .failureUrl("/login.html") //登录失败后返回登录页
@@ -111,7 +111,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .withUser("admin")
                 .password(bCryptPasswordEncoder().encode("abc123"))
-//                .authorities("sys:log","sys:user")
+                .authorities("sys:log", "sys:user")
                 .roles("admin")
                 .and()
                 .passwordEncoder(bCryptPasswordEncoder());//配置BCrypt加密

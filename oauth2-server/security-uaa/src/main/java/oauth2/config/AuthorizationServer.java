@@ -45,24 +45,8 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
     private AuthorizationCodeServices authorizationCodeServices;
 
     //认证管理器
-    @Resource
+    @Autowired
     private AuthenticationManager authenticationManager;
-
-    /**
-     * 令牌管理服务
-     *
-     * @return
-     */
-    @Bean
-    public AuthorizationServerTokenServices tokenServices() {
-        DefaultTokenServices services = new DefaultTokenServices();
-        services.setClientDetailsService(clientDetailsService); //客户端详情服务
-        services.setSupportRefreshToken(true); //支持刷新令牌
-        services.setTokenStore(tokenStore); //令牌的存储策略
-        services.setAccessTokenValiditySeconds(7200); //令牌默认有效时间2小时
-        services.setRefreshTokenValiditySeconds(259200); //刷新令牌默认有效期3天
-        return services;
-    }
 
     /**
      * 设置授权码模式的授权码如何存取，暂时采用内存方式
@@ -72,19 +56,6 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
     @Bean
     public AuthorizationCodeServices authorizationCodeServices(){
         return new InMemoryAuthorizationCodeServices();
-    }
-
-
-    /**
-     * @param security
-     * @throws Exception
-     */
-    @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        security
-                .tokenKeyAccess("permitAll()")
-                .checkTokenAccess("permitAll()")
-                .allowFormAuthenticationForClients(); //表单认证（申请令牌）
     }
 
     /**
@@ -106,7 +77,23 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
     }
 
     /**
+     * 令牌管理服务
      *
+     * @return
+     */
+    @Bean
+    public AuthorizationServerTokenServices tokenServices() {
+        DefaultTokenServices services = new DefaultTokenServices();
+        services.setClientDetailsService(clientDetailsService); //客户端详情服务
+        services.setSupportRefreshToken(true); //支持刷新令牌
+        services.setTokenStore(tokenStore); //令牌的存储策略
+        services.setAccessTokenValiditySeconds(7200); //令牌默认有效时间2小时
+        services.setRefreshTokenValiditySeconds(259200); //刷新令牌默认有效期3天
+        return services;
+    }
+
+    /**
+     * 令牌访问端点配置
      *
      * @param endpoints
      * @throws Exception
@@ -118,6 +105,20 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
                 .authorizationCodeServices(authorizationCodeServices)//授权码服务
                 .tokenServices(tokenServices()) //令牌管理服务
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST);
+    }
+
+    /**
+     * 对授权端点接口的安全约束
+     *
+     * @param security
+     * @throws Exception
+     */
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security
+                .tokenKeyAccess("permitAll()") // /auth/token_key是公开的
+                .checkTokenAccess("permitAll()") // /auth/check_token是公开的
+                .allowFormAuthenticationForClients(); //允许表单认证（申请令牌）
     }
 
 }
