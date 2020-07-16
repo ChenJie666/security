@@ -1,14 +1,12 @@
 package oauth2.config;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
-import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import javax.annotation.Resource;
 
@@ -24,17 +22,22 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     private static final String RESOURCE_ID = "res1";    //与授权中心客户端配置一致
 
     @Resource
-    private ResourceServerTokenServices tokenServices;
+    private TokenStore tokenStore;
 
-    @Bean
-    public ResourceServerTokenServices tokenServices() {
-        RemoteTokenServices service = new RemoteTokenServices();
-        service.setCheckTokenEndpointUrl("http://localhost:8080/oauth/check_token");
-        service.setClientId("c1");
-        service.setClientSecret("abc123");
-
-        return service;
-    }
+    /**
+     * 对token进行远程校验
+     *
+     * @return
+     */
+//    @Bean
+//    public ResourceServerTokenServices tokenServices() {
+//        RemoteTokenServices service = new RemoteTokenServices();
+//        service.setCheckTokenEndpointUrl("http://localhost:8080/oauth/check_token");
+//        service.setClientId("c1");
+//        service.setClientSecret("abc123");
+//
+//        return service;
+//    }
 
 
     /**
@@ -46,7 +49,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources.resourceId(RESOURCE_ID) //资源id
-                .tokenServices(tokenServices) //到验证服务器验证令牌有效性
+//                .tokenServices(tokenServices()) //到验证服务器验证令牌有效性
+                .tokenStore(tokenStore) //对JWT令牌进行本地验证
                 .stateless(true);
     }
 
