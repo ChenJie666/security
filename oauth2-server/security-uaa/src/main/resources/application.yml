@@ -10,6 +10,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: abc123
+  main:
+    allow-bean-definition-overriding: true
 
 jwt:
   secret: abcdefg
