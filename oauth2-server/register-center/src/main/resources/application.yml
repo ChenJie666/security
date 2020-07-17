@@ -1,0 +1,19 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: REGISTER-CENTER
+
+eureka:
+  server:
+    enable-self-preservation: false #是否启动自动保护机制，默认为true
+    eviction-interval-timer-in-ms: 2000 #清理间隔（单位毫秒，默认60*1000ms）
+  client:
+    register-with-eureka: false #不向自己注册服务
+    fetch-registry: false #false表示不需要去注册中心检索服务
+    service-url:
+      defaultZone: http://localhost:${server.port}/eureka/ #用于搭建集群
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true

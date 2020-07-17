@@ -12,7 +12,7 @@
     <artifactId>security-uaa</artifactId>
 
     <dependencies>
-        <!-- 框架依赖 -->
+        <!-- springcloud依赖 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-security</artifactId>
@@ -21,14 +21,15 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-oauth2</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
         <!--<dependency>-->
         <!--<groupId>org.springframework.security.oauth.boot</groupId>-->
         <!--<artifactId>spring-security-oauth2-autoconfigure</artifactId>-->
         <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.security</groupId>-->
-        <!--<artifactId>spring-security-jwt</artifactId>-->
-        <!--</dependency>-->
+
         <!--<dependency>-->
         <!--<groupId>org.springframework.cloud</groupId>-->
         <!--<artifactId>spring-cloud-starter-gateway</artifactId>-->
@@ -50,6 +51,20 @@
         <!--<artifactId>spring-cloud-starter-netflix-ribbon</artifactId>-->
         <!--</dependency>-->
 
+        <!-- springboot依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+
         <!-- 数据库依赖 -->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -64,18 +79,6 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-        </dependency>
         <!--<dependency>-->
         <!--<groupId>org.springframework.retry</groupId>-->
         <!--<artifactId>spring-retry</artifactId>-->

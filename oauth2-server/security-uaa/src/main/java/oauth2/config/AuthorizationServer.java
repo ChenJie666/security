@@ -137,7 +137,7 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
         endpoints
                 .authenticationManager(authenticationManager)//认证管理器
                 .authorizationCodeServices(authorizationCodeServices)//授权码服务
-                .tokenServices(tokenServices()) //令牌管理服务
+                .tokenServices(tokenServices()) //令牌管理服务（设置令牌存储方式和令牌类型JWT）
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST);
     }
 

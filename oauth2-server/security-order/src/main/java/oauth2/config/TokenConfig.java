@@ -14,17 +14,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @Configuration
 public class TokenConfig {
 
-    private String SIGNING_KEY = "uaa123";
-
-    /**
-     * 将JWT作为令牌
-     *
-     * @return
-     */
-    @Bean
-    public TokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
-    }
+    private static final String SIGNING_KEY = "uaa123";
 
     /**
      * 配置JWT令牌
@@ -36,6 +26,16 @@ public class TokenConfig {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setSigningKey(SIGNING_KEY);
         return converter;
+    }
+
+    /**
+     * 将JWT作为令牌
+     *
+     * @return
+     */
+    @Bean
+    public TokenStore tokenStore() {
+        return new JwtTokenStore(accessTokenConverter());
     }
 
 }

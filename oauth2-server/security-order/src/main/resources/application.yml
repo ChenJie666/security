@@ -1,2 +1,22 @@
 server:
-  port: 8090
+  port: 9600
+
+spring:
+  application:
+    name: ORDER-SERVER
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:9000/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh,health,info,env

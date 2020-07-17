@@ -2,9 +2,11 @@ server:
   servlet:
     session:
       timeout: 20s
-  port: 8080
+  port: 9500
 
 spring:
+  application:
+    name: UAA-CENTER
   datasource:
     url: jdbc:mysql://116.62.148.11:3306/security?useUnicode=true&characterEncoding=utf-8
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -17,3 +19,19 @@ jwt:
   secret: abcdefg
   expiration: 3600000
   header: JWTHeaderName
+
+eureka:
+  client:
+    register-with-eureka: true #向eureka进行注册
+    fetch-registry: true #从注册中心拉取注册服务
+    service-url:
+      defaultZone: http://localhost:9000/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh,health,info,env

@@ -51,7 +51,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         resources.resourceId(RESOURCE_ID) //资源id
 //                .tokenServices(tokenServices()) //到验证服务器验证令牌有效性
                 .tokenStore(tokenStore) //对JWT令牌进行本地验证
-                .stateless(true);
+                .stateless(true); //只允许基于令牌的身份验证
     }
 
     /**
