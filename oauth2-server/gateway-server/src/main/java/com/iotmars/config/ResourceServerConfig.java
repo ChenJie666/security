@@ -9,7 +9,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import javax.annotation.Resource;
 
-@Configuration
+//@Configuration
 public class ResourceServerConfig {
 
     private static final String RESOURCE_ID = "res1";
@@ -29,10 +29,8 @@ public class ResourceServerConfig {
 
         @Override
         public void configure(HttpSecurity http) throws Exception {
-            http
-                    .authorizeRequests()
-                    .antMatchers("/auu/**")
-                    .access("oauth2.hasScope('ROLE_API')");
+            http.authorizeRequests()
+                    .antMatchers("/auu/**").permitAll();
 
         }
     }
@@ -42,12 +40,15 @@ public class ResourceServerConfig {
     public class OrderServerConfig extends ResourceServerConfigurerAdapter {
         @Override
         public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-            super.configure(resources);
+            resources.resourceId(RESOURCE_ID)
+                    .tokenStore(tokenStore)
+                    .stateless(true);
         }
 
         @Override
         public void configure(HttpSecurity http) throws Exception {
-            super.configure(http);
+            http.authorizeRequests()
+                    .antMatchers("/order/**").access("#oauth2.hasScope('ROLE_API')");
         }
     }
 
