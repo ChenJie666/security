@@ -1,16 +1,20 @@
 package com.iotmars.filter;
 
 import cn.hutool.core.codec.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -22,6 +26,7 @@ import java.util.stream.Collectors;
 public class AuthFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        System.out.println("*****进入gateway filter：" + exchange.getRequest().getHeaders().getFirst("Authorization"));
         // 获取权限信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("*****AuthFilter  authentication:" + authentication);
@@ -34,9 +39,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
         String principal = userAuthentication.getName();
         // 获取用户权限
         Collection<? extends GrantedAuthority> authoritiesList = userAuthentication.getAuthorities();
-        List<String> authorities = authoritiesList.stream().map(authority -> {
-            return ((GrantedAuthority) authority).getAuthority();
-        }).collect(Collectors.toList());
+        List<String> authorities = authoritiesList.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         // 获取用户请求中的参数列表
         OAuth2Request oAuth2Request = oAuth2Authentication.getOAuth2Request();
         Map<String, String> requestParameters = oAuth2Request.getRequestParameters();
@@ -58,6 +61,6 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return 0;
+        return Integer.MAX_VALUE;
     }
 }

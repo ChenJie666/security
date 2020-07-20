@@ -6,7 +6,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
-//@Configuration
+@Configuration
 public class TokenConfig {
 
     private static final String SIGNING_KEY = "uaa123";

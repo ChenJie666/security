@@ -2,6 +2,9 @@ package oauth2.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +25,10 @@ public class OrderController {
 
     @GetMapping(value = "/r/users")
     public String users() {
-        return "访问资源users";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication.getClass().getName());
+        String name = authentication.getName();
+        return name + "访问资源users";
     }
 
     @GetMapping(value = "/list")

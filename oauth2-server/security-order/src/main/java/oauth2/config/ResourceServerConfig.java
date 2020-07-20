@@ -65,7 +65,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/**").access("#oauth2.hasScope('all')")  //用户有"all"授权，可以访问所有接口
+                .antMatchers("/r/**").authenticated() //所有的/r/**的请求必须认证通过
+//                .anyRequest().permitAll();//除了r/**，其他请求都可以随意访问
+                .antMatchers("/list").hasAuthority("ROLE_US")
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

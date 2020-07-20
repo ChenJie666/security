@@ -38,7 +38,7 @@ public class ExceptionHandlerAdvice {
     public Result serverException(Throwable throwable) {
         log.error("服务端异常", throwable);
 
-        return Result.error(HttpStatus.INTERNAL_SERVER_ERROR.value(),"服务端异常，请联系管理员");
+        return Result.error(HttpStatus.INTERNAL_SERVER_ERROR.value(),throwable.getMessage());
     }
 
 }
