@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//@Component
+@Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @SneakyThrows
     @Override
@@ -28,6 +28,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         if (encodeToken != null) {
             String token = Base64.decodeStr(encodeToken);
             JSONObject jsonObject = new JSONObject(token);
+            System.out.println(jsonObject.toString());
             // 用户信息
             String principal = jsonObject.getString("principal");
             // 用户权限

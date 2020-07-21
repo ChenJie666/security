@@ -11,11 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,13 +44,8 @@ public class AuthFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
 
-        StringBuffer requestURL = request.getRequestURL();
-        String contextPath = request.getContextPath();
-        System.out.println("*****requestURL " + requestURL);
-        System.out.println("*****contextPath " + contextPath);
-        InputStream in = request.getInputStream();
-        String body = StreamUtils.copyToString(in, Charset.forName("UTF-8"));
-        System.out.println("*****body " + body);
+        StringBuffer requestUrl = request.getRequestURL();
+        System.out.println("*****requestUrl --> " + requestUrl);
 
         // 获取权限信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

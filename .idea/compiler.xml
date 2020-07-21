@@ -9,7 +9,11 @@
         <outputRelativeToContentRoot value="true" />
         <module name="basic-server" />
         <module name="database-server" />
+        <module name="gateway" />
+        <module name="gateway-server" />
+        <module name="gateway-zuul" />
         <module name="jwt-server" />
+        <module name="register-center" />
         <module name="security-order" />
         <module name="security-uaa" />
       </profile>

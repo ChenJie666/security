@@ -26,7 +26,7 @@ public class ExceptionHandlerAdvice {
 		e.printStackTrace();
 		String message = e.getMessage();
 		HashMap<String, Object> map = new HashMap<>();
-		map.put("code",500);
+		map.put("code",5000);
 		map.put("msg",message);
 		return map;
 	}

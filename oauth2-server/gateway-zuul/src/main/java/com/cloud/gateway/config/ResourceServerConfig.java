@@ -21,7 +21,7 @@ public class ResourceServerConfig {
     @EnableResourceServer
     public class UAAServerConfig extends ResourceServerConfigurerAdapter {
         @Override
-        public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+        public void configure(ResourceServerSecurityConfigurer resources) {
             resources.resourceId(RESOURCE_ID)
                     .tokenStore(tokenStore)
                     .stateless(true);

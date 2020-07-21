@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * @Description: 分析token认证拦截器
+ * @Description: 如果携带token，那么解析token得到UsernamePasswordAuthenticationToken放到上下文中
  * @Author: CJ
  * @Data: 2020/6/12 14:50
  */
@@ -32,6 +32,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Resource
     private MyUserDetailsServer myUserDetailsServer;
 
+    /**
+     * 如果未经过身份验证，则解析token获取身份
+     * @param request
+     * @param response
+     * @param filterChain
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader(jwtTokenUtil.getHeader());

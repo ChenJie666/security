@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: ORDER-SERVER
+  datasource:
+    url: jdbc:mysql://116.62.148.11:3306/security?useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: abc123
 
 eureka:
   client:

@@ -22,6 +22,11 @@ public class JwtAuthController {
     @Resource
     JwtAuthService jwtAuthService;
 
+    /**
+     * 根据账号密码获取token
+     * @param map
+     * @return
+     */
     @RequestMapping(value = "/authentication")
     public CommonResult login(@RequestBody Map<String,String> map){
         String username = map.get("username");
