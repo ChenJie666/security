@@ -1,0 +1,55 @@
+server:
+  port: 9200
+
+spring:
+  application:
+    name: GATEWAY-ZUUL
+#  cloud:
+#    config:
+#      discovery:
+#        enabled: true
+#        serviceId: config-center
+#      profile: dev
+#      fail-fast: true
+
+zuul:
+  prefix:
+  ignored-services: "*"
+  routes:
+    uaa:
+      path: /uaa/**
+      serviceId: UAA-CENTER
+      stripPrefix: true
+    order:
+      path: /order/**
+      serviceId: ORDER-SERVER
+      stripPrefix: true
+  host:  #设置超时时间
+    connect-timeout-millis: 10000
+    socket-timeout-millis: 60000
+  add-proxy-headers: true
+  sensitive-headers: #什么都不写表示不过滤请求头中的任何信息
+#将请求转发时会携带原有的请求头
+#  ribbon:
+#    eager-load:
+#      enabled: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9000/eureka/
+    registry-fetch-interval-seconds: 5
+  instance:
+    lease-expiration-duration-in-seconds: 15
+    lease-renewal-interval-in-seconds: 5
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -32,8 +33,8 @@ public class OrderController {
     }
 
     @GetMapping(value = "/list")
-    public String r1() {
-        return "访问资源list";
+    public String r1(@RequestParam(name = "id",required = false,defaultValue = "") String id) {
+        return "访问资源list:" + id;
     }
 
 }

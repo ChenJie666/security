@@ -67,7 +67,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/r/**").authenticated() //所有的/r/**的请求必须认证通过
 //                .anyRequest().permitAll();//除了r/**，其他请求都可以随意访问
-                .antMatchers("/list").hasAuthority("ROLE_US")
+                .antMatchers("/list").hasAuthority("ROLE_admin")
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

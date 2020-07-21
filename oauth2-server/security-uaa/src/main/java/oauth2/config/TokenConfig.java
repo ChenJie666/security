@@ -27,7 +27,7 @@ public class TokenConfig {
 //        return new InMemoryTokenStore();
 //    }
 
-    private String SIGNING_KEY = "uaa123";
+    private static final String SIGNING_KEY = "uaa123";
 
     /**
      * 将JWT作为令牌

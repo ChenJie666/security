@@ -16,6 +16,7 @@
         <module>security-uaa</module>
         <module>register-center</module>
         <module>gateway-server</module>
+        <module>zuul-server</module>
     </modules>
 
     <dependencyManagement>

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component
+//@Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @SneakyThrows
     @Override
@@ -41,12 +41,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             // 将authenticationToken填充到安全上下文中
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
-//        else {
-//            String authorities = "ROLE_USER,ROLE_ADMIN,ROLE_API";
-//            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("CJ", null, AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
-//            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-//            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-//        }
         // 继续执行下一个过滤器
         filterChain.doFilter(httpServletRequest,httpServletResponse);
     }

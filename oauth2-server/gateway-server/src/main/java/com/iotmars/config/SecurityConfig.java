@@ -24,12 +24,12 @@ public class SecurityConfig {
 	@Bean
 	public SecurityWebFilterChain webFluxSecurityFilterChain(ServerHttpSecurity http) throws Exception {
 
-		http.csrf().disable().exceptionHandling().and()
+		http.csrf().disable()
 				.authorizeExchange()
 				.pathMatchers("/order/**").hasAuthority("ROLE_admin")
 				.anyExchange().authenticated();
 
-		http.oauth2ResourceServer().jwt();
+//		http.oauth2ResourceServer().jwt();
 
 		return http.build();
 	}
