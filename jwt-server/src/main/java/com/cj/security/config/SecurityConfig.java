@@ -31,6 +31,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
+
+    /**
+     * 注入认证管理器，在JwtAuthService类中使用，对请求中的账号密码进行认证，认证通过则返回令牌
+     * @return
+     * @throws Exception
+     */
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    @Override
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
     /**
      * 采用JWT方式进行认证
      *
@@ -99,16 +111,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/css/**", "/fonts/**", "img/**", "js/**");
     }
 
-    /**
-     * 注入认证管理器，在JwtAuthService类中使用
-     * @return
-     * @throws Exception
-     */
-    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
-    @Override
-    public AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
-    }
 
     /**
      * 添加security框架的同源策略

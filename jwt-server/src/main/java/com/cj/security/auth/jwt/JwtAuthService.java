@@ -36,7 +36,7 @@ public class JwtAuthService {
         try {
             //根据账号密码构造token
             UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
-            //通过该方法对账号密码进行认证，认证不通过则抛出异常
+            //通过该方法对账号密码进行认证，认证不通过则抛出异常。此处会调用UserDetailsService获取用户信息进行校验。
             Authentication authenticate = authenticationManager.authenticate(upToken);
             //认证通过则将认证结果放入上下文
             SecurityContextHolder.getContext().setAuthentication(authenticate);

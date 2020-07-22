@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.netflix.client.ClientException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -20,6 +21,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {
+
+	@ExceptionHandler(AccessDeniedException.class)
+	public Map<String, Object> handleAccessRE(AccessDeniedException ex){
+		System.out.println(ex.getMessage());
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("code",403);
+		map.put("msg","请求未通过网关认证哦！！！(异常处理中心处理)");
+		return map;
+	}
 
 	@ExceptionHandler
 	public Map<String, Object> exception(Exception e) {

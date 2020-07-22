@@ -28,11 +28,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .addFilterBefore(tokenAuthenticationFilter,UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/r/contents").hasAuthority("/contents/")
-                .antMatchers("/r/users").hasAuthority("/users/")
-                .antMatchers("/r/**").authenticated() //所有的/r/**的请求必须认证通过
+                .antMatchers("/r/contents/").hasAuthority("/contents/")
+                .antMatchers("/r/users/").hasAuthority("/users/")
+//                .antMatchers("/r/**").authenticated() //所有的/r/**的请求必须认证通过
 //                .anyRequest().permitAll();//除了r/**，其他请求都可以随意访问
-                .antMatchers("/list").hasAuthority("ROLE_admin");
+                .antMatchers("/list/").hasAuthority("ROLE_admin");
     }
 
     @Resource
